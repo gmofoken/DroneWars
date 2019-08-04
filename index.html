@@ -4,27 +4,13 @@
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
         <link rel="stylesheet" href="./src/style.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="src/library/Toast-Notification-Bootstrap-jQuery-Bootoast/src/bootoast.css">
     </head>
     <body>
-        <div class="row">
-            <div class="col col-xs-0 col-md-3"></div>
-            <div class="col col-xs-12 col-md-6">
-                <div class="row" id="board"></div>
-            </div>
-            <div class="col col-xs-0 col-md-3"></div>
-        </div>
-
-        
-        
-        <div class="command footer navbar-fixed-bottom text-center">
-            <div class="text-center">
-                <span id="announce">.</span>
-            </div>
-    
-            <div class="spacer-sm"></div>
-
+        <div class="command footer navbar-fixed-top text-center">
             <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
                 <strong>PLACE</strong>
             </button>
@@ -57,6 +43,21 @@
                 <strong>CANCEL</strong>
             </button>
         </div>
+
+        <div class="spacer-lg"></div>
+        <div class="spacer-sm"></div>
+
+        <div class="row">
+            <div class="col col-xs-0 col-md-3"></div>
+            <div class="col col-xs-12 col-md-6">
+                <div class="row" id="board"></div>
+            </div>
+            <div class="col col-xs-0 col-md-3"></div>
+        </div>
+
+        
+        
+        
 
         <!-- Modal -->
         <div id="myModal" class="modal fade" role="dialog">
@@ -96,15 +97,26 @@
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
                 crossorigin="anonymous"></script>
         
+        <script src="./src/library/Toast-Notification-Bootstrap-jQuery-Bootoast/src/bootoast.js"></script>
+
         <script src="./src/scripts/drone.js"></script>
         <script src="./src/scripts/commands.js"></script>
+        <script src="./src/scripts/validator.js"></script>
 
         <script>
 
             let drone = new Drone();
             let _commands = new Commands();
+            let validator = new Validator();
 
             $(function() {
+
+                $( "#success" ).click(function() {
+                    bootoast.toast({
+                        message: 'This is a success toast message',
+                        type: 'success'
+                    });
+                });
 
                 $("#btnPlaceDrone").click(function(){
                     drone.InitiateDrone();

@@ -6,40 +6,56 @@ let Commands = function(){
     }
 
     this.ExecuteCommands = function(){
-        let commands = this.commandList;
-        setTimeout(function() {                    
-            RunCommand(commands);
-        }, 1000)
+        let commands = this.commandList;                   
+        RunCommand(commands);
         this.commandList = [];
     }
 
     function RunCommand(commands){
         let command = commands[0];
-        commands.shift();
-        if (command.Drone !== null && command.Drone.Deployed === undefined){
+        
+        if (command.Drone !== null){
+            if (validator.IsDroneDeployed()){
+                validator.Warning("Drone has already been deployed. Aborting remaining commands.");
+                return;
+            }
             PlaceDrone();
-            drone.Deployed = true;
         } else if (command.drone === undefined){
+            if (validator.IsDroneDeployed() === false){
+                validator.Danger("Drone has not been deployed");
+                return;
+            }
+
             if (command.Instruction === "Left" || command.Instruction === "Right"){
                 ChangeDirection(command.Instruction);
                 RemoveDrone();
                 PlaceDrone();
             }  
             if (command.Instruction === "Move"){
-                RemoveDrone();//setTimeout(RemoveDrone,2000)
-                MoveDrone();
-                PlaceDrone();
+                if (validator.CanMove() === true){
+                    RemoveDrone();
+                    MoveDrone();
+                    PlaceDrone();
+                } else {
+                    validator.Danger("Move out of bounds. Ignoring command.");
+                }
             }
             if (command.Instruction === "Report")
-                $("#announce").text(drone.Report());
+                drone.Report();
             if (command.Instruction === "Attack"){
-                Attack(2);   
+                if (validator.CanFire() === true)
+                    Attack(2);
+                else
+                    validator.Warning("Action is too risky. Ignoring command.");
             }
         }
+        commands.shift();
         if (commands.length > 0){
             setTimeout(function() {                    
                 RunCommand(commands);
             }, 1000)
+        }else{
+            validator.Success("All commands have been excecuted succesfully.");
         }
     }
 
@@ -141,6 +157,7 @@ let Commands = function(){
         let image = (drone.Direction == "North") ? "./src/Drones/North.png" :
         (drone.Direction == "South") ? "./src/Drones/South.png" :
         (drone.Direction == "East") ? "./src/Drones/East.png" : "./src/Drones/West.png";
+        drone.Deployed = true;
 
         $('#'+imageId).attr("src", image);
     }

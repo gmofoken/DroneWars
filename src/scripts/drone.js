@@ -11,6 +11,6 @@ let Drone = function(){
     }
 
     this.Report = function(){
-        return "Output:" + this.Y_coordinate + ',' + this.X_coordinate + ',' + this.Direction;
+        validator.Info( "Output:" + this.Y_coordinate + ',' + this.X_coordinate + ',' + this.Direction);
     }
 };
