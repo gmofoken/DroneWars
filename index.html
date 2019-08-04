@@ -9,8 +9,9 @@
             crossorigin="anonymous">
         <link rel="stylesheet" href="src/library/Toast-Notification-Bootstrap-jQuery-Bootoast/src/bootoast.css">
     </head>
-    <body>
+    <body class="background">
         <div class="command footer navbar-fixed-top text-center">
+            <div class="spacer-sm"></div>
             <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
                 <strong>PLACE</strong>
             </button>
@@ -39,25 +40,21 @@
                 <strong>EXECUTE</strong>
             </button>
 
-            <button id="btnCancel" class="btn btn-default">
-                <strong>CANCEL</strong>
+            <button id="btnAbort" class="btn btn-default">
+                <strong>ABORT</strong>
             </button>
         </div>
 
         <div class="spacer-lg"></div>
         <div class="spacer-sm"></div>
 
-        <div class="row">
+        <div class="row no_margin">
             <div class="col col-xs-0 col-md-3"></div>
             <div class="col col-xs-12 col-md-6">
                 <div class="row" id="board"></div>
             </div>
             <div class="col col-xs-0 col-md-3"></div>
         </div>
-
-        
-        
-        
 
         <!-- Modal -->
         <div id="myModal" class="modal fade" role="dialog">
@@ -102,65 +99,6 @@
         <script src="./src/scripts/drone.js"></script>
         <script src="./src/scripts/commands.js"></script>
         <script src="./src/scripts/validator.js"></script>
-
-        <script>
-
-            let drone = new Drone();
-            let _commands = new Commands();
-            let validator = new Validator();
-
-            $(function() {
-
-                $( "#success" ).click(function() {
-                    bootoast.toast({
-                        message: 'This is a success toast message',
-                        type: 'success'
-                    });
-                });
-
-                $("#btnPlaceDrone").click(function(){
-                    drone.InitiateDrone();
-                    let command = {
-                        Drone : drone,
-                        Instruction :  "place"
-                    };
-                    _commands.AddCommand(command);
-                })
-
-                $(".commands").click(function(){
-                    let command = {
-                        Drone : null,
-                        Instruction :  this.id
-                    };
-                    _commands.AddCommand(command);
-                });
-
-                $("#btnExecute").click(function(){
-                    _commands.ExecuteCommands();
-                });
-
-                //////////////////////////////////////////////////////////
-                var sideCol = '<div class="col col-xs-1"></div>';
-
-                for (i = 0; i < 10; i++){
-                    $("#board").append(sideCol);
-                    for (j = 0; j < 10; j++){
-                        var bg_image = ' <img class="image" id="img'+i+j+'"> '
-                        var innerCol = '<div class="col col-xs-1 board_cells" id="'+ i+ j+ '">'+bg_image+'</div>';
-                        $("#board").append(innerCol);
-                    }
-                    $("#board").append(sideCol);
-                }
-
-
-                var height = document.getElementById("00").clientWidth;
-                // $("#box").height(height);
-                var el = document.getElementsByClassName("col");
-
-                for(i = 0; i < el.length; i++)
-                    el[i].style.height = height+"px";
-            });
-            
-        </script>
+        <script src="./src/scripts/index.js"></script>
     </body>
 </html>

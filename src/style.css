@@ -1,6 +1,7 @@
 .board_cells {
   border: solid thin;
   padding: 0 !important;
+  background-color: aliceblue;
 }
 .board_cells .image {
   width: 100%;
@@ -17,6 +18,15 @@
 
 .command {
   height: 90px;
+}
+
+.background {
+  background-color: black;
+}
+
+.no_margin {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 /*# sourceMappingURL=style.css.map */

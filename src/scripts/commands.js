@@ -1,17 +1,28 @@
 let Commands = function(){
     this.commandList = [];
+    this.errors = false;
 
     this.AddCommand = function(cmd){
         this.commandList.push(cmd);
     }
 
-    this.ExecuteCommands = function(){
-        let commands = this.commandList;                   
-        RunCommand(commands);
+    this.Abort = function(){
+        if (this.commandList.length > 0)
+            validator.Info("Aborting commands.");
+        else
+            validator.Warning("No Commands entered");
         this.commandList = [];
     }
 
-    function RunCommand(commands){
+    this.ExecuteCommands = function(){
+        if (this.commandList.length > 0){
+            let commands = this.commandList;                   
+            RunCommand(commands, this.errors);
+            this.commandList = [];
+        }
+    }
+
+    function RunCommand(commands, errors){
         let command = commands[0];
         
         if (command.Drone !== null){
@@ -38,6 +49,7 @@ let Commands = function(){
                     PlaceDrone();
                 } else {
                     validator.Danger("Move out of bounds. Ignoring command.");
+                    this.errors = true;
                 }
             }
             if (command.Instruction === "Report")
@@ -45,17 +57,22 @@ let Commands = function(){
             if (command.Instruction === "Attack"){
                 if (validator.CanFire() === true)
                     Attack(2);
-                else
+                else{
+                    this.errors = true;
                     validator.Warning("Action is too risky. Ignoring command.");
+                }
             }
         }
         commands.shift();
         if (commands.length > 0){
             setTimeout(function() {                    
-                RunCommand(commands);
+                RunCommand(commands, errors);
             }, 1000)
         }else{
-            validator.Success("All commands have been excecuted succesfully.");
+            if (errors === false)
+                validator.Success("All commands have been excecuted succesfully.");
+            else
+                validator.Danger("Commands have been excecuted with errors.");
         }
     }
 
@@ -175,8 +192,6 @@ let Commands = function(){
     }
 
     function RemoveProjectile(imageId){
-
-        console.log(imageId);
         let image =  "./src/Drones/transparent.png";
 
         $('#'+imageId).attr("src", image);
