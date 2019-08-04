@@ -32,13 +32,59 @@ let Commands = function(){
             }
             if (command.Instruction === "Report")
                 $("#announce").text(drone.Report());
+            if (command.Instruction === "Attack"){
+                Attack(2);   
+            }
         }
         if (commands.length > 0){
-            console.log(this.commandList)
             setTimeout(function() {                    
                 RunCommand(commands);
             }, 1000)
         }
+    }
+
+    function Attack(iterations){
+        let x = + drone.X_coordinate;
+        let y = + drone.Y_coordinate;
+        
+        if (drone.Direction === "North"){
+            if (iterations === 2)
+                y--;
+            else
+                y -= 2;
+        }
+
+        if (drone.Direction === "South"){
+            if (iterations === 2)
+                y++;
+            else
+                y += 2;
+        }
+
+        if (drone.Direction === "East"){
+            if (iterations === 2)
+                x++;
+            else
+                x += 2;
+        }
+
+        if (drone.Direction === "West"){
+            if (iterations === 2)
+                x--;
+            else
+                x -= 2;
+        }
+
+        let image =  "img" + y + x;
+
+        if (iterations > 0){
+            setTimeout(function() {                    
+                DisplayProjectile(image, (iterations + 1));
+                Attack(iterations);
+            }, 200)
+        }
+        
+        iterations--;
     }
 
     function MoveDrone()
@@ -81,7 +127,6 @@ let Commands = function(){
             else if (drone.Direction == "East")
                 drone.Direction = "North";
         }
-        console.log(drone);
     }
 
     function RemoveDrone(){
@@ -96,6 +141,26 @@ let Commands = function(){
         let image = (drone.Direction == "North") ? "./src/Drones/North.png" :
         (drone.Direction == "South") ? "./src/Drones/South.png" :
         (drone.Direction == "East") ? "./src/Drones/East.png" : "./src/Drones/West.png";
+
+        $('#'+imageId).attr("src", image);
+    }
+
+    function DisplayProjectile(imageId, iteration){
+        let image = (iteration === 2) ? "./src/Drones/bullet.jpg" : "./src/Drones/explosion.png";
+
+        $('#'+imageId).attr("src", image);
+
+        if (iteration > 0){
+            setTimeout(function() {                    
+                RemoveProjectile(imageId);
+            }, 200)
+        }
+    }
+
+    function RemoveProjectile(imageId){
+
+        console.log(imageId);
+        let image =  "./src/Drones/transparent.png";
 
         $('#'+imageId).attr("src", image);
     }
