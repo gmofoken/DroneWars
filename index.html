@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" href="./src/style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        
+    </head>
+    <body>
+        <div class="row">
+            <div class="col col-xs-0 col-md-3"></div>
+            <div class="col col-xs-12 col-md-6">
+                <div class="row" id="board"></div>
+            </div>
+            <div class="col col-xs-0 col-md-3"></div>
+        </div>
+
+        
+        
+        <div class="command footer navbar-fixed-bottom text-center">
+            <div class="text-center">
+                <span id="announce">.</span>
+            </div>
+    
+            <div class="spacer-sm"></div>
+
+            <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                <strong>PLACE</strong>
+            </button>
+
+            <button id="Left" class="btn btn-default commands">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+
+            <button id="Move" class="btn btn-default commands">
+                <span class="glyphicon glyphicon-arrow-up"></span>
+            </button>
+
+            <button id="Right" class="btn btn-default commands">
+                <span class="glyphicon glyphicon-arrow-right"></span>
+            </button>
+
+            <button id="Report" class="btn btn-default commands">
+                <strong>REPORT</strong>
+            </button>
+
+            <button id="Attack" class="btn btn-default commands">
+                <strong>ATTACK</strong>
+            </button>
+            <span><strong>|</strong></span>
+            <button id="btnExecute" class="btn btn-default">
+                <strong>EXECUTE</strong>
+            </button>
+
+            <button id="btnCancel" class="btn btn-default">
+                <strong>CANCEL</strong>
+            </button>
+        </div>
+
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="spacer-lg"></div>
+                        <input id="x_coordinate" type="number" value="0" class="form-control" placeholder="X Coordinate"  min="0" max="9"/>
+                        <div class="spacer-lg"></div>
+                        <input id="y_coordinate" type="number" value="0" class="form-control" placeholder="Y Coordinate"  min="0" max="9"/>
+                        <div class="spacer-lg"></div>
+                        <select id="direction" class="form-control">
+                            <option value="North">North</option>
+                            <option value="East">East</option>
+                            <option value="South">South</option>
+                            <option value="West">West</option>
+                        </select>
+                        <div class="spacer-lg"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnPlaceDrone" type="button" class="btn btn-default" data-dismiss="modal"><strong>PLACE</strong></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.js"
+			    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+                crossorigin="anonymous"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
+                crossorigin="anonymous"></script>
+        
+        <script src="./src/scripts/drone.js"></script>
+        <script src="./src/scripts/commands.js"></script>
+
+        <script>
+
+            let drone = new Drone();
+            let _commands = new Commands();
+
+            $(function() {
+
+                $("#btnPlaceDrone").click(function(){
+                    drone.InitiateDrone();
+                    let command = {
+                        Drone : drone,
+                        Instruction :  "place"
+                    };
+                    _commands.AddCommand(command);
+                })
+
+                $(".commands").click(function(){
+                    let command = {
+                        Drone : null,
+                        Instruction :  this.id
+                    };
+                    _commands.AddCommand(command);
+                });
+
+                $("#btnExecute").click(function(){
+                    _commands.ExecuteCommands();
+                });
+
+                //////////////////////////////////////////////////////////
+                var sideCol = '<div class="col col-xs-1"></div>';
+
+                for (i = 0; i < 10; i++){
+                    $("#board").append(sideCol);
+                    for (j = 0; j < 10; j++){
+                        var bg_image = ' <img class="image" id="img'+i+j+'"> '
+                        var innerCol = '<div class="col col-xs-1 board_cells" id="'+ i+ j+ '">'+bg_image+'</div>';
+                        $("#board").append(innerCol);
+                    }
+                    $("#board").append(sideCol);
+                }
+
+
+                var height = document.getElementById("00").clientWidth;
+                // $("#box").height(height);
+                var el = document.getElementsByClassName("col");
+
+                for(i = 0; i < el.length; i++)
+                    el[i].style.height = height+"px";
+            });
+            
+        </script>
+    </body>
+</html>

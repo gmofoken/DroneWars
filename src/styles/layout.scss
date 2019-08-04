@@ -1,0 +1,19 @@
+.board_cells{
+    border: solid thin;
+    padding: 0 !important;
+    .image{
+        width: 100%;
+    }
+}
+
+.spacer-lg{
+    height: 5vh;
+}
+
+.spacer-sm{
+    height: 2vh;
+}
+
+.command{
+    height: 90px;
+}
