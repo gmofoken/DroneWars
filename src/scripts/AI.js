@@ -4,7 +4,7 @@ let AI = function(){
 
     this.TrackPlayer = function(player){
         this.Player1 = player;
-        if (this.Player1.Moves > 3){
+        if (this.Player1.Moves > 1){
             automator.SpawnEnemies();
         }
     }
@@ -39,13 +39,13 @@ let AI = function(){
         if (face === dir)
             return "Move"
         if (face === "North")
-            command = (dir === "East") ? "Right" : "Left";
+            command = (dir === "East" || dir === "South") ? "Right" : "Left";
         if (face === "South")
-            command = (dir === "East") ? "Left" : "Right";
+            command = (dir === "East" || dir === "North") ? "Left" : "Right";
         if (face === "East")
-            command = (dir === "North") ? "Left" : "Right";
+            command = (dir === "North" || dir === "West") ? "Left" : "Right";
         if (face === "West")
-            command = (dir === "East") ? "Right" : "Left";
+            command = (dir === "East" || dir === "North") ? "Right" : "Left";
         return command;
     }
 

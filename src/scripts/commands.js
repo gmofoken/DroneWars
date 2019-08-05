@@ -43,7 +43,7 @@ let Commands = function(){
                 drone.Remove();
                 drone.Place();
             }  
-            console.log(command);
+            
             if (command.Instruction === "Move"){
                 if (validator.CanMove(drone) === true){
                     drone.Remove();
