@@ -1,6 +1,7 @@
 let Commands = function(){
     this.commandList = [];
     this.errors = false;
+    let Parent = this;
 
     this.AddCommand = function(cmd){
         this.commandList.push(cmd);
@@ -14,25 +15,25 @@ let Commands = function(){
         this.commandList = [];
     }
 
-    this.ExecuteCommands = function(){
+    this.ExecuteCommands = function(drone){
         if (this.commandList.length > 0){
             let commands = this.commandList;                   
-            RunCommand(commands, this.errors);
+            RunCommand(commands, drone);
             this.commandList = [];
         }
     }
 
-    function RunCommand(commands, errors){
+    function RunCommand(commands, drone){
         let command = commands[0];
         
         if (command.Drone !== null){
-            if (validator.IsDroneDeployed()){
+            if (validator.IsDroneDeployed(drone)){
                 validator.Warning("Drone has already been deployed. Aborting remaining commands.");
                 return;
             }
             drone.Place();
         } else if (command.drone === undefined){
-            if (validator.IsDroneDeployed() === false){
+            if (validator.IsDroneDeployed(drone) === false){
                 validator.Danger("Drone has not been deployed");
                 return;
             }
@@ -43,22 +44,22 @@ let Commands = function(){
                 drone.Place();
             }  
             if (command.Instruction === "Move"){
-                if (validator.CanMove() === true){
+                if (validator.CanMove(drone) === true){
                     drone.Remove();
                     drone.Move();
                     drone.Place();
                 } else {
                     validator.Danger("Move out of bounds. Ignoring command.");
-                    this.errors = true;
+                    Parent.errors = true;
                 }
             }
             if (command.Instruction === "Report")
                 drone.Report();
             if (command.Instruction === "Attack"){
-                if (validator.CanFire() === true)
+                if (validator.CanFire(drone) === true)
                     drone.Attack(2);
                 else{
-                    this.errors = true;
+                    Parent.errors = true;
                     validator.Warning("Action is too risky. Ignoring command.");
                 }
             }
@@ -66,13 +67,14 @@ let Commands = function(){
         commands.shift();
         if (commands.length > 0){
             setTimeout(function() {                    
-                RunCommand(commands, errors);
+                RunCommand(commands, drone);
             }, 1000)
         }else{
-            if (errors === false)
-                validator.Success("All commands have been excecuted succesfully.");
-            else
-                validator.Danger("Commands have been excecuted with errors.");
+            // if (Parent.errors === false)
+            //     validator.Success("All commands have been excecuted succesfully.");
+            // else
+            //     validator.Danger("Commands have been excecuted with errors.");
+            Parent.errors = false;
         }
     }
 }

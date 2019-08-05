@@ -1,5 +1,5 @@
 let Validator = function() {
-    this.IsDroneDeployed = function(){
+    this.IsDroneDeployed = function(drone){
         if (drone.Deployed === false || drone.Deployed === undefined)
             return false;
         else
@@ -39,21 +39,21 @@ let Validator = function() {
         });
     }
 
-    this.CanFire = function(){
-        if (DistanceFromWall() >= 2)
+    this.CanFire = function(drone){
+        if (DistanceFromWall(drone) >= 2)
             return true;
         else
             return false;
     }
 
-    this.CanMove = function(){
-        if (DistanceFromWall() > 0)
+    this.CanMove = function(drone){
+        if (DistanceFromWall(drone) > 0)
             return true;
         else
             return false;
     }
 
-    function DistanceFromWall() {
+    function DistanceFromWall(drone) {
         let x = + drone.X_coordinate;
         let y = + drone.Y_coordinate;
 

@@ -1,41 +1,24 @@
-let drone = new Drone();
+let Player = new Drone();
 let commands = new Commands();
 let validator = new Validator();
 
 $(function() {
     Init();
 
-    $( "#success" ).click(function() {
-        bootoast.toast({
-            message: 'This is a success toast message',
-            type: 'success'
-        });
-    });
-
     $("#btnPlaceDrone").click(function(){
-        drone.InitiateDrone();
-        let command = {
-            Drone : drone,
-            Instruction :  "place"
-        };
-        commands.AddCommand(command);
-        validator.Info("Drone has been deployed.");
+        Player.InitiateDrone();
+        PlaceDrone();
     })
 
     $(".commands").click(function(){
         let instruction = this.id;
 
-        let command = {
-            Drone : null,
-            Instruction : instruction
-        };
-        commands.AddCommand(command);
-        validator.Info(instruction + " command has been entered.");
+        Command(instruction);
     });
 
     $("#btnExecute").click(function(){
         validator.Info("Executing commands.");
-        commands.ExecuteCommands();
+        commands.ExecuteCommands(Player);
     });
 
     $("#btnAbort").click(function(){
@@ -43,8 +26,18 @@ $(function() {
     });
 });
 
+function Command(instruction){
+    let command = {
+        Drone : null,
+        Instruction : instruction
+    };
+    commands.AddCommand(command);
+    //validator.Info(instruction + " command has been entered.");
+    commands.ExecuteCommands(Player);
+}
+
 function Init(){
-    var sideCol = '<div class="col col-xs-1"></div>';
+    let sideCol = '<div class="col col-xs-1"></div>';
 
     for (i = 0; i < 10; i++){
         $("#board").append(sideCol);
@@ -56,9 +49,46 @@ function Init(){
         $("#board").append(sideCol);
     }
 
-    var height = document.getElementById("00").clientWidth;
-    var el = document.getElementsByClassName("col");
+    let height = document.getElementById("00").clientWidth;
+    let el = document.getElementsByClassName("col");
 
     for(i = 0; i < el.length; i++)
         el[i].style.height = height+"px";
+}
+
+function PlaceDrone(){
+    let command = {
+        Drone : Player,
+        Instruction :  "place"
+    };
+    commands.AddCommand(command);
+    //validator.Info("Drone has been deployed.");
+    commands.ExecuteCommands(Player);
+}
+
+function AutoPlaceDrone(){
+    if (validator.IsDroneDeployed(Player) === false)
+        Player.SpawnPlayer();
+    PlaceDrone();
+}
+
+function KeyLog(){
+    let x = event.which || event.keyCode;
+    let instruction;
+
+    if (x === 119)
+        instruction = "Move";
+    else if(x === 97)
+        instruction = "Left";
+    else if (x === 100)
+        instruction = "Right";
+    else if (x === 102)
+        instruction = "Attack";
+    else if (x === 114)
+        instruction = "Report";
+    else if (x === 112)
+        AutoPlaceDrone();
+
+    if (instruction !== undefined)
+        Command(instruction);
 }

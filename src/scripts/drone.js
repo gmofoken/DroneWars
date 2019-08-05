@@ -10,6 +10,12 @@ let Drone = function(){
         this.Y_coordinate = document.getElementById("y_coordinate").value;
     }
 
+    this.SpawnPlayer = function(){
+        this.Direction = "East";
+        this.X_coordinate = '0';
+        this.Y_coordinate = '9';
+    }
+
     this.Report = function(){
         validator.Info( "Output:" + this.Y_coordinate + ',' + this.X_coordinate + ',' + this.Direction);
     }
