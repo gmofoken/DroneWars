@@ -6,3 +6,4 @@ Control Keys
 -W :  Move
 -R :  Report
 -F :  Attack
+-P :  Spawn Player
