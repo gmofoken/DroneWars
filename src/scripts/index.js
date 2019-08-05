@@ -1,14 +1,23 @@
 let Player = new Drone();
 let commands = new Commands();
 let validator = new Validator();
+let aIntelligence = new AI();
+let automator = new Automator();
 
 $(function() {
     Init();
 
     $("#btnPlaceDrone").click(function(){
+        Player.InitiateDrone("Player");
+        PlaceDrone();
         if (validator.IsDroneDeployed(Player) === false){
-            Player.InitiateDrone();
-            PlaceDrone();
+            let command = {
+                Drone : Player,
+                Instruction :  "place"
+            };
+            commands.AddCommand(command);
+            //validator.Info("Drone has been deployed.");
+            commands.ExecuteCommands(Player);
         }else{
             validator.Warning("Drone has already been deployed. Aborting command.");
         }
@@ -60,10 +69,10 @@ function Init(){
         el[i].style.height = height+"px";
 }
 
-function PlaceDrone(){
+function PlaceDrone(drone){
     if (validator.IsDroneDeployed(Player) === false){
         let command = {
-            Drone : Player,
+            Drone : drone,
             Instruction :  "place"
         };
         commands.AddCommand(command);
@@ -75,9 +84,10 @@ function PlaceDrone(){
 }
 
 function AutoPlaceDrone(){
-    if (validator.IsDroneDeployed(Player) === false)
-        Player.SpawnPlayer();
-    PlaceDrone();
+    if (validator.IsDroneDeployed(Player) === false){
+        Player.SpawnPlayer("Player");
+        PlaceDrone(Player);
+    }
 }
 
 function KeyLog(){

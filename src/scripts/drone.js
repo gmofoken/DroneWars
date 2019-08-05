@@ -1,19 +1,43 @@
 let Drone = function(){
-    let Y_coordinate = 0;
-    let X_coordinate = 0;
-    let Deployed = false;
-    let Direction ;
+    this.Y_coordinate = 0;
+    this.X_coordinate = 0;
+    this.Deployed = false;
+    this.Direction ;
+    this.Type;
+    this.Moves = 0;
+    this.Commands = new Commands();
 
-    this.InitiateDrone = function(){
+    this.InitiateEnemy = function( ){
+        let e = aIntelligence.DetermineSafeCoordinates();
+        this.X_coordinate = e.x;
+        this.Y_coordinate = e.y;
+        this.Type = "Enemy";
+        this.Direction = e.d;
+    }
+
+    this.InitiateDrone = function(typ){
         this.Direction = document.getElementById("direction").value;
         this.X_coordinate = document.getElementById("x_coordinate").value;
         this.Y_coordinate = document.getElementById("y_coordinate").value;
+        this.Type = typ;
+        this.Moves = 0;
     }
 
-    this.SpawnPlayer = function(){
+    this.SpawnPlayer = function(typ){
         this.Direction = "East";
         this.X_coordinate = '0';
         this.Y_coordinate = '9';
+        this.Type = typ;
+        this.Moves = 0;
+    }
+
+    this.Automate = function(){
+        let Parent = this;
+        setInterval(function() { 
+            let command = aIntelligence.MakeDecision(Parent);
+            Parent.Commands.AddCommand({Drone: null, Instruction: command});
+            Parent.Commands.ExecuteCommands(Parent);
+        }, 1000)
     }
 
     this.Report = function(){
@@ -59,6 +83,10 @@ let Drone = function(){
             x--;
         this.X_coordinate = x+'';
         this.Y_coordinate = y+'';
+        this.Moves++;
+
+        if (this.Type === "Player")
+            aIntelligence.TrackPlayer(this);
     }
 
     this.Attack = function(iterations){
@@ -100,7 +128,7 @@ let Drone = function(){
             setTimeout(function() {                    
                 DisplayProjectile(image, (iterations + 1));
                 Parent.Attack(iterations);
-            }, 200)
+            }, 50)
         }
         
         iterations--;
@@ -131,7 +159,7 @@ let Drone = function(){
         if (iteration > 0){
             setTimeout(function() {                    
                 RemoveProjectile(imageId);
-            }, 200)
+            }, 50)
         }
     }
 

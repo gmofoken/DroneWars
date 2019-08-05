@@ -2,12 +2,13 @@ let Commands = function(){
     this.commandList = [];
     this.errors = false;
     let Parent = this;
+    this.Automate = false;
 
     this.AddCommand = function(cmd){
         this.commandList.push(cmd);
     }
 
-    this.Abort = function(){
+    this.Automate = function(){
         if (this.commandList.length > 0)
             validator.Info("Aborting commands.");
         else
@@ -25,7 +26,6 @@ let Commands = function(){
 
     function RunCommand(commands, drone){
         let command = commands[0];
-        
         if (command.Drone !== null){
             if (validator.IsDroneDeployed(drone)){
                 validator.Warning("Drone has already been deployed. Aborting command.");
@@ -43,6 +43,7 @@ let Commands = function(){
                 drone.Remove();
                 drone.Place();
             }  
+            console.log(command);
             if (command.Instruction === "Move"){
                 if (validator.CanMove(drone) === true){
                     drone.Remove();
