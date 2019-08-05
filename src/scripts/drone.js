@@ -17,7 +17,7 @@ let Drone = function(){
     }
 
     this.Report = function(){
-        validator.Info( "Output:" + this.Y_coordinate + ',' + this.X_coordinate + ',' + this.Direction);
+        validator.Info( "My Location Is :" + this.Y_coordinate + ',' + this.X_coordinate + ',' + this.Direction);
     }
 
     this.ChangeDirection = function(direction){

@@ -28,7 +28,7 @@ let Commands = function(){
         
         if (command.Drone !== null){
             if (validator.IsDroneDeployed(drone)){
-                validator.Warning("Drone has already been deployed. Aborting remaining commands.");
+                validator.Warning("Drone has already been deployed. Aborting command.");
                 return;
             }
             drone.Place();

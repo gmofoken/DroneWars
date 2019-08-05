@@ -6,8 +6,12 @@ $(function() {
     Init();
 
     $("#btnPlaceDrone").click(function(){
-        Player.InitiateDrone();
-        PlaceDrone();
+        if (validator.IsDroneDeployed(Player) === false){
+            Player.InitiateDrone();
+            PlaceDrone();
+        }else{
+            validator.Warning("Drone has already been deployed. Aborting command.");
+        }
     })
 
     $(".commands").click(function(){
@@ -57,13 +61,17 @@ function Init(){
 }
 
 function PlaceDrone(){
-    let command = {
-        Drone : Player,
-        Instruction :  "place"
-    };
-    commands.AddCommand(command);
-    //validator.Info("Drone has been deployed.");
-    commands.ExecuteCommands(Player);
+    if (validator.IsDroneDeployed(Player) === false){
+        let command = {
+            Drone : Player,
+            Instruction :  "place"
+        };
+        commands.AddCommand(command);
+        //validator.Info("Drone has been deployed.");
+        commands.ExecuteCommands(Player);
+    }else{
+        validator.Warning("Drone has already been deployed. Aborting command.");
+    }
 }
 
 function AutoPlaceDrone(){
