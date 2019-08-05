@@ -7,3 +7,6 @@ Control Keys
 -R :  Report
 -F :  Attack
 -P :  Spawn Player
+
+
+You can also make use of the buttons to operate the drone.
