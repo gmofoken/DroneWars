@@ -1,6 +1,7 @@
 let AI = function(){
     this.Player1;
     this.EnemyCommands = ["Move", "Left", "Right", "Attack"];
+    Parent = this;
 
     this.TrackPlayer = function(player){
         this.Player1 = player;
@@ -30,14 +31,23 @@ let AI = function(){
 
     this.MakeDecision = function(drone){
         let dir = TrackPlayer(drone, this.Player1);
-        let dec = OrientSelf(drone.Direction, dir);
+        let dec = OrientSelf(drone, dir);
         return dec;
     }
 
-    function OrientSelf(face, dir){
+    function IsPlayerInRange(drone){
+        if (drone.X_coordinate === Parent.Player1.X_coordinate || drone.Y_coordinate === Parent.Player1.Y_coordinate)
+            return true;
+    }
+
+    function OrientSelf(drone, dir){
         let command;
-        if (face === dir)
-            return "Move"
+        let face = drone.Direction;
+        if (face === dir){
+            if (IsPlayerInRange(drone) === true)
+                return "Attack";
+            return "Move";
+        }
         if (face === "North")
             command = (dir === "East" || dir === "South") ? "Right" : "Left";
         if (face === "South")
